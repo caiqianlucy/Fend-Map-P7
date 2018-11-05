@@ -25,7 +25,8 @@ class Helper{
         method,
         headers:Helper.headers()
       },
-  ).then(res=>res.json());
+  ).then(res=>res.json())
+  .catch(e=>console.log(e));
   }
 }
 export default class FourSquare {

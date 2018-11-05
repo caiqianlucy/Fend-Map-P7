@@ -70,7 +70,7 @@ class App extends Component {
         <h1 className="title"> Chinese Restaurant near Sunnyvale </h1>
           <div className="App">
             <ListView {...this.state} listItemOnClick={this.listItemOnClick}/>
-              <Map role="application" aria-label="map" {...this.state} markerOnClick={this.markerOnClick}/>
+            <Map role="application" aria-label="map" {...this.state} markerOnClick={this.markerOnClick}/>
          </div>
       </div>
     );
