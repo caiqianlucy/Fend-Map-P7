@@ -26,9 +26,12 @@ class Helper{
         headers:Helper.headers()
       },
   ).then(res=>res.json())
-  .catch(e=>console.log(e));
-  }
+  .catch(e =>{
+    alert('There are error in fetching information from FourSquare! Check your network connection or FourSquare limits!')
+  })
+ }
 }
+
 export default class FourSquare {
   static search(urlPrams){
     return Helper.easyFetch('/venues/search', 'GET', urlPrams);

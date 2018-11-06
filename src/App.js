@@ -11,11 +11,23 @@ class App extends Component {
     this.state={
       venues:[],
       markers:[],
+      isOnline:true,
+      googleMapError:false,
       updateSuperState: obj => {
         this.setState(obj);
       }
     };
   }
+  //update internet connection status for error-handling
+  ComponentWillMount(){
+  window.addEventListener('online', this.updateConnectionStatus);
+  window.addEventListener('offline', this.updateConnectionStatus);
+  }
+
+  updateConnnectionStatus=(e)=>{
+    e.type==='online'?this.setState({isOnline: true}):this.setState({isOnline: false})
+  };
+
   //close all the markers
   closeMarkers=() => {
     const markers=this.state.markers.map((marker) => {
@@ -35,7 +47,8 @@ class App extends Component {
     FourSquare.getVenueDetails(marker.id).then(res => {
       const newVenue=Object.assign(venue, res.response.venue);
       this.setState({venues: Object.assign(this.state.venues, newVenue)});
-    });
+      console.log(venue);
+    }).catch(e => alert("Errors in fetching information! Check your network connection or foursquare app limits!"));
   }
   //show infowindow when the venue on the list is clicked
   listItemOnClick=(venue)=>{
@@ -44,12 +57,16 @@ class App extends Component {
   }
   //obtain data from foursquare and set state
   componentDidMount(){
+    window.gm_authFailure=()=>{
+      this.setState({googleMapError: true})
+    };
     FourSquare.search({
       near: "sunnyvale, CA",
       query:"chinese restaurant",
       limit: 20
     }).then(results => {
       const { venues }=results.response;
+      console.log(venues);
       const markers=venues.map(venue=>{
         return {
           lat:venue.location.lat,
@@ -61,7 +78,7 @@ class App extends Component {
         }
       });
       this.setState({venues, markers});
-    });
+    }).catch(e => alert("Errors in fetching information! Check your network connection or foursquare app limits!"));
   }
   //render map and listview
   render() {
@@ -70,7 +87,9 @@ class App extends Component {
         <h1 className="title"> Chinese Restaurant near Sunnyvale </h1>
           <div className="App">
             <ListView {...this.state} listItemOnClick={this.listItemOnClick}/>
-            <Map role="application" aria-label="map" {...this.state} markerOnClick={this.markerOnClick}/>
+            {(this.state.isOnline && !this.state.googleMapError)?
+            <Map role="application" aria-label="map" {...this.state} markerOnClick={this.markerOnClick}/>:
+          <h1> Error in goolge map loading </h1> }
          </div>
       </div>
     );

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps"
 
+
 const MyMapComponent = withScriptjs(withGoogleMap(props =>
   (<GoogleMap
     zoom={10}
@@ -26,7 +27,9 @@ const MyMapComponent = withScriptjs(withGoogleMap(props =>
                  src={`${venue.bestPhoto.prefix}200x200${venue.bestPhoto.suffix}`}
                  alt={`imgae for ${venue.name}`}
                  />}
-                 <p>{venue.name}</p>
+                 <h2>{venue.name}</h2>
+                 {venue.location.address && <p className="restarantLocation" arial-label="location">{`location: ${venue.location.address}`}</p>}
+                 {venue.url && <a href={venue.url}>See website</a>}
               </React.Fragment>
            </InfoWindow> )}
         </Marker>
